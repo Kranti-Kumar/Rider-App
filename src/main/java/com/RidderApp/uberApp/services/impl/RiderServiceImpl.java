@@ -5,7 +5,14 @@ import com.RidderApp.uberApp.dto.RideDto;
 import com.RidderApp.uberApp.dto.RideRequestDto;
 import com.RidderApp.uberApp.dto.RiderDto;
 import com.RidderApp.uberApp.entities.RideRequest;
+import com.RidderApp.uberApp.entities.Rider;
+import com.RidderApp.uberApp.entities.User;
+import com.RidderApp.uberApp.entities.enums.RideRequestStatus;
+import com.RidderApp.uberApp.repositories.RideRequstRepository;
+import com.RidderApp.uberApp.repositories.RiderRepository;
 import com.RidderApp.uberApp.services.RiderService;
+import com.RidderApp.uberApp.strategies.DriverMatchingStrategy;
+import com.RidderApp.uberApp.strategies.RideFareCalculationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -17,11 +24,26 @@ import java.util.List;
 @Slf4j
 public class RiderServiceImpl implements RiderService {
     private final ModelMapper modelMapper;
+    private final RideFareCalculationStrategy rideFareCalculationStrategy;
+    private final DriverMatchingStrategy driverMatchingStrategy;
+    private final RideRequstRepository rideRequstRepository;
+    private final RiderRepository riderRepository;
+
     @Override
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
         RideRequest rideRequest = modelMapper.map(rideRequestDto, RideRequest.class);
-        log.info(rideRequest.toString());
-        return null;
+        rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
+
+        Double fare = rideFareCalculationStrategy.calculateFare(rideRequest);
+        rideRequest.setFare(fare);
+
+        RideRequest savedRideRequest = rideRequstRepository.save(rideRequest);
+
+        driverMatchingStrategy.findMatchingDriver(rideRequest);
+
+
+
+        return modelMapper.map(savedRideRequest,RideRequestDto.class);
     }
 
     @Override
@@ -42,5 +64,15 @@ public class RiderServiceImpl implements RiderService {
     @Override
     public List<RideDto> getAllMyRides() {
         return List.of();
+    }
+
+    @Override
+    public Rider createNewRider(User user) {
+        Rider rider = Rider
+                .builder()
+                .user(user)
+                .rating(0.0)
+                .build();
+        return riderRepository.save(rider);
     }
 }
