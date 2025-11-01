@@ -5,10 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class DriverDto {
 
+    private Long id;
     private UserDto user;
-    private Double reating;
+    private Double rating;
+    private Boolean available;
+    private String vehicleId;
 }

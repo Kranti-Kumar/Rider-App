@@ -3,13 +3,18 @@ package com.RidderApp.uberApp.entities;
 import com.RidderApp.uberApp.entities.enums.PaymentMethod;
 import com.RidderApp.uberApp.entities.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Builder
 public class Payment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

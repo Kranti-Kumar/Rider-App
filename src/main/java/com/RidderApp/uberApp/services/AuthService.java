@@ -6,9 +6,11 @@ import com.RidderApp.uberApp.dto.UserDto;
 
 public interface AuthService {
 
-    String login(String email , String Password);
+    String[] login(String email, String password);
 
     UserDto signup(SignupDto signupDto);
 
-    DriverDto onboardNewDriver(Long userId);
+    DriverDto onboardNewDriver(Long userId, String vehicleId);
+
+    String refreshToken(String refreshToken);
 }

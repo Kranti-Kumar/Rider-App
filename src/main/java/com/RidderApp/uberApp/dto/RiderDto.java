@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class RiderDto {
 
+    private Long id;
     private UserDto user;
-    private Double reating;
+    private Double rating;
 }
