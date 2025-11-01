@@ -1,5 +1,5 @@
 # Use a lightweight base image with Java 21 (Corretto 21 is suggested in buildspec.yml)
-FROM public.ecr.aws/amazoncorretto/amazon-corretto:21-alpine-jdk
+FROM public.ecr.aws/docker/library/eclipse-temurin:21-jre-alpine
 
 # Define the build argument for the JAR file name
 # Note: Spring Boot Maven plugin creates JAR with artifactId as prefix
