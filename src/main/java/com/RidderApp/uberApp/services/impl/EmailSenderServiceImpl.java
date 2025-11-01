@@ -3,6 +3,7 @@ package com.RidderApp.uberApp.services.impl;
 import com.RidderApp.uberApp.services.EmailSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@ConditionalOnBean(JavaMailSender.class)
 public class EmailSenderServiceImpl implements EmailSenderService {
 
     private final JavaMailSender javaMailSender;
@@ -26,7 +28,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             javaMailSender.send(simpleMailMessage);
             log.info("Email sent successfully");
         } catch (Exception e) {
-            log.info("Cannot send email, "+e.getMessage());
+            log.info("Cannot send email, " + e.getMessage());
         }
     }
 
@@ -43,7 +45,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             javaMailSender.send(simpleMailMessage);
             log.info("Email sent successfully");
         } catch (Exception e) {
-            log.info("Cannot send email, "+e.getMessage());
+            log.info("Cannot send email, " + e.getMessage());
         }
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.support.HttpRequestHandlerServlet;
 
 import java.util.Arrays;
 
@@ -24,19 +23,20 @@ public class AuthController {
 
     @PostMapping("/signup")
     ResponseEntity<UserDto> signUp(@RequestBody SignupDto signupDto) {
-       return new ResponseEntity<>(authService.signup(signupDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.signup(signupDto), HttpStatus.CREATED);
     }
 
-    //@Secured("ROLE_ADMIN")
+    // @Secured("ROLE_ADMIN")
     @PostMapping("/onBoardNewDriver/{userId}")
-    ResponseEntity<DriverDto> onBoardNewDriver(@PathVariable Long userId, @RequestBody OnboardDriverDto onboardDriverDto) {
+    ResponseEntity<DriverDto> onBoardNewDriver(@PathVariable Long userId,
+            @RequestBody OnboardDriverDto onboardDriverDto) {
         return new ResponseEntity<>(authService.onboardNewDriver(userId,
                 onboardDriverDto.getVehicleId()), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto,
-                                           HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String tokens[] = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
         Cookie cookie = new Cookie("refreshToken", tokens[1]);
@@ -49,8 +49,8 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponseDto> refresh(HttpServletRequest request) {
-        String refreshToken = Arrays.stream(request.getCookies()).
-                filter(cookie -> "refreshToken".equals(cookie.getName()))
+        String refreshToken = Arrays.stream(request.getCookies())
+                .filter(cookie -> "refreshToken".equals(cookie.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new AuthenticationServiceException("Refresh token not found inside the Cookies"));
@@ -59,6 +59,5 @@ public class AuthController {
 
         return ResponseEntity.ok(new LoginResponseDto(accessToken));
     }
-
 
 }
