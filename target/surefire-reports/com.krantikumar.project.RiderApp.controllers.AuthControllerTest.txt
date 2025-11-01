@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.krantikumar.project.RiderApp.controllers.AuthControllerTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.21 s -- in com.krantikumar.project.RiderApp.controllers.AuthControllerTest
