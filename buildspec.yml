@@ -3,24 +3,32 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto21
+      java: corretto21 # Matches pom.xml Java 17, but Corretto 21 is fine
     commands:
       - echo Installing Maven...
   pre_build:
     commands:
       - echo Logging in to Docker hub...
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - REPOSITORY_URI=$DOCKER_USERNAME/uberapp # Use Docker Hub username from environment variable
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
   build:
     commands:
       - echo Building, Testing and packaging the application...
       - mvn package
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Build, Testing and packaging completed.
 artifacts:
   files:
-    - target/*.jar
+    - target/*.jar # Now optional, but kept for compatibility
   discard-paths: yes
 cache:
   paths:
-    - '/root/.m2/**/*'
+    - "/root/.m2/**/*"

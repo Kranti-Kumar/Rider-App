@@ -1,0 +1,54 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# IDE files
+.idea
+.vscode
+*.iml
+*.iws
+*.ipr
+.settings
+.classpath
+.project
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd
+
+# Build output (except final JAR)
+target/
+!target/*.jar
+target/classes/
+target/test-classes/
+target/surefire-reports/
+target/maven-status/
+
+# Test files
+src/test/
+**/test/
+**/*Test.java
+**/*Tests.java
+
+# Documentation
+README.md
+HELP.md
+*.md
+
+# CI/CD
+buildspec.yml
+.github/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+

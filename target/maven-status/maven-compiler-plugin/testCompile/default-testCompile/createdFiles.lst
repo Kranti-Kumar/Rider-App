@@ -1,3 +1,6 @@
-com\krantikumar\project\RiderApp\controllers\AuthControllerTest.class
-com\krantikumar\project\RiderApp\UberAppApplicationTests.class
-com\krantikumar\project\RiderApp\TestContainerConfiguration.class
+com\RidderApp\uberApp\controllers\DriverControllerTest.class
+com\RidderApp\uberApp\controllers\AuthControllerTest.class
+com\RidderApp\uberApp\UberAppApplicationTests.class
+com\RidderApp\uberApp\TestContainerConfiguration.class
+com\RidderApp\uberApp\controllers\RiderControllerTest.class
+com\RidderApp\uberApp\services\impl\AuthServiceImplTest.class
