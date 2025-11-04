@@ -1,111 +1,103 @@
-md
-# Rider App
+# 🚖 Rider App Backend API
 
-**Rider App** is a Java-based Spring Boot application designed to assist delivery riders in managing tasks, optimizing routes, and tracking deliveries in real-time. The project aims to streamline the delivery process, ensuring timely and accurate deliveries.
+**Rider App** is a Java-based **Spring Boot** application that orchestrates the **ride-booking lifecycle**, including **driver matching**, **payment**, and **user authentication** for a scalable ride service.  
+It is architected as a **stateless backend** using **JWTs** to enable **horizontal scalability**.
 
-## 🚀 Features
+---
 
-- 🛵 **Delivery Management:** Track and manage multiple deliveries efficiently.
-- 🧭 **Route Optimization:** Suggests the most efficient routes for faster deliveries.
-- 🔔 **Real-time Updates:** Provides live tracking and delivery status updates.
-- 💡 **User-friendly Interface:** Easy to navigate and use on the go.
-- 📊 **Task Management:** Helps riders organize and prioritize delivery tasks.
+## 🚀 Key Backend Features
+
+### 🔑 JWT-Based Authentication
+- Stateless user authentication using **Access** and **Refresh Tokens**.  
+- Refresh Token is secured with **httpOnly cookies** for enhanced security.
+
+### 🗺️ Geo-Spatial Matching
+- Leverages **PostgreSQL GeoSpatial** capabilities (`ST_DWithin`, `ST_Distance`) for **low-latency driver proximity searches**.
+
+### 🧠 Strategy Pattern Implementation
+- Uses **pluggable strategies** for flexible and extensible logic:
+  - **Driver Matching:** Nearest vs. Top-Rated  
+  - **Fare Calculation:** Default vs. Surge Pricing  
+  - **Payment Processing:** Wallet vs. Cash  
+
+### 💰 Transactional Wallet
+- Manages user balances with **financial consistency** ensured via:
+  - **Optimistic Locking**
+  - **Database Transactions**
+
+---
 
 ## 🛠️ Prerequisites & Dependencies
 
-Before you begin, ensure you have the following installed:
+Before you begin, make sure the following are installed:
 
-- **Java Development Kit (JDK):** Version 21 or higher
-- **Maven:** Version 3.6.0 or higher
-- **Docker:** Latest version (Optional, for containerization)
-- **Spring Boot:**  (Managed by Maven - included in `pom.xml`)
+| Dependency | Version | Purpose |
+|-------------|----------|----------|
+| **Java Development Kit (JDK)** | 17+ | Required to run the application |
+| **Maven** | 3.6.0+ | For project build and dependency management |
+| **PostgreSQL** | — | Required for GeoSpatial features |
+
+---
 
 ## ⚙️ Installation & Setup Instructions
 
-1. **Clone the Repository:**
+### 1️⃣ Clone the Repository
+-git clone https://github.com/Kranti-Kumar/Rider-App.git
+-cd Rider-App
 
-   ```bash
-   git clone https://github.com/Kranti-Kumar/Rider-App.git
-   cd Rider-App
-   ```
+### 2️⃣ Configure Database
 
-2. **Build the Project:**
+-Ensure your PostgreSQL database is running and update the connection details in
+-src/main/resources/application.properties (or use environment variables):
 
-   ```bash
-   mvn clean install
-   ```
+-spring.datasource.url=jdbc:postgresql://localhost:5432/riderdb
+-spring.datasource.username=postgres
+-spring.datasource.password=yourpassword
 
-3. **Run the Application:**
+### 3️⃣ Build the Project
+-mvn clean install
 
-   *   **Option 1: Using Maven:**
+### 4️⃣ Run the Application
 
-       ```bash
-       mvn spring-boot:run
-       ```
+-Option 1: Using Maven
 
-   *   **Option 2: Using the JAR file:**
+-mvn spring-boot:run
 
-       After building the project, a JAR file will be created in the `target/` directory.  Run it with:
 
-       ```bash
-       java -jar target/uberApp-0.0.1-SNAPSHOT.jar
-       ```
+-Option 2: Using the JAR file
+-After building, run:
 
-4. **Docker Setup (Optional):**
+java -jar target/RiderApp-0.0.1-SNAPSHOT.jar
 
-    If you have Docker installed, you can build and run the application using Docker:
+### 🧭 Core API Endpoints
 
-    1. **Build the Docker Image:**
+All protected endpoints require a valid JWT in the Authorization: Bearer <token> header.
 
-       ```bash
-       docker build -t rider-app .
-       ```
+-Module	Endpoint	Method	Security	Description
+-Auth	/auth/signup	POST	Public	Registers a new user/rider
+-Auth	/auth/login	POST	Public	Issues JWTs and sets refresh token cookie
+-Rider	/rider/requestRide	POST	RIDER	Submits a new ride request
+-Driver	/driver/updateLocation	PATCH	DRIVER	Updates driver’s current GeoSpatial location
+-Driver	/driver/acceptRide/{id}	POST	DRIVER	Accepts a pending ride request
+-Admin	/auth/onBoardNewDriver/{userId}	POST	ADMIN	Converts an existing user to a driver
 
-    2. **Run the Docker Container:**
 
-       ```bash
-       docker run -p 8080:8080 rider-app
-       ```
+### 🧩 Tech Stack Summary
 
-       (This assumes your application runs on port 8080. Adjust as necessary.)
+Backend: Spring Boot (Java 17)
 
-## 🧭 Usage Examples & API Documentation
+Database: PostgreSQL with PostGIS
 
-After starting the application, you can access the API endpoints. Detailed API documentation (e.g., using Swagger/OpenAPI) is planned for a future release. Example API endpoints include:
+Auth: JWT, Spring Security
 
--   `/deliveries` - To manage delivery tasks.
--   `/routes` - To optimize the routes.
--   `/status` - To track delivery status.
+Build Tool: Maven
 
-Please refer to the application logs for precise URL mappings and HTTP method usage until full API documentation is available.
+### 🏗️ Architecture Overview
 
-## ⚙️ Configuration Options
+The Rider App backend follows a modular service-based architecture, ensuring:
 
-The application can be configured using the `application.properties` or `application.yml` file located in the `src/main/resources/` directory. You can modify settings such as:
+Clear separation of concerns
 
--   **Server Port:** `server.port=8080`
--   **Database Connection:** (If applicable, configure database connection properties here)
--   **Logging Level:** `logging.level.root=INFO`
+High scalability
 
-Environment variables can also be used to override the properties defined in the configuration file.
-
-## 🤝 Contributing Guidelines
-
-We welcome contributions to Rider App! Here's how you can contribute:
-
-1.  **Fork the Repository:** Create your own fork of the repository.
-2.  **Create a Branch:** Create a new branch for your feature or bug fix.
-3.  **Make Changes:** Implement your changes.
-4.  **Test Your Changes:** Ensure your changes are working correctly.
-5.  **Commit Your Changes:** Commit your changes with descriptive commit messages.
-6.  **Submit a Pull Request:** Submit a pull request to the main repository.
-
-Please adhere to the existing code style and conventions.
-
-## 📜 License Information
-
-The project is currently without a specified license. All rights are reserved by the owner.
-
-## 🙏 Acknowledgments
-
-We would like to acknowledge the Spring Boot and Docker communities for providing excellent tools and resources.
+Easy maintainability
